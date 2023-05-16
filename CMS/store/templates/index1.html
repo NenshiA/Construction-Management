@@ -1,0 +1,161 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load cart %}
+{% load custom_filter %}
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+ .footer
+ {
+    margin-top: 100px;
+    padding-top:3%;
+    padding-bottom:1%;
+    width: 100%;
+    background: black;
+    color: orange;
+    display: flex;
+ }
+ .footer div{
+    text-align: left;
+    width:100%;
+ }
+ .k
+ {
+    color:rgb(255, 255, 255);
+    font-size: 20px;
+
+ }
+ .col-3
+ {
+    margin-left: 20%;
+ }
+ .col-2{
+    flex-grow: 2;
+<!--    margin-left: 30%;-->
+}
+.footer div h3{
+    font-weight: 1000;
+    margin-bottom: 30px;
+    letter-spacing: 1px ;
+}
+
+form  input{
+    width: 400px;
+    height: 40px;
+    border-radius: 4px;
+    text-align: center;
+    outline: none;
+    border: none;
+    font-size:30px;
+}
+form button{
+    background: transparent;
+    border: 2px solid black;
+    color: aliceblue;
+    border-radius: 30px;
+    padding: 10px 30px;
+    font-size: 40px;
+    cursor: pointer;
+}
+
+	</style>
+</head>
+<!-- body -->
+<div class="container-fluid mt-3">
+	<div class="row">
+
+
+		<!-- filter -->
+
+		<div class="col-lg-3 mx-auto">
+			<div class="list-group">
+
+				<a href="/store1" class="list-group-item list-group-item-action">All Products</a>
+
+				{% for category in categories %}
+				<a href="/store1?category={{category.id}}"
+					class="list-group-item list-group-item-action">{{category.name}}</a>
+				{% endfor %}
+			</div>
+		</div>
+
+		<!-- all products -->
+		<div id='products' class="col-lg-9 mx-auto">
+			<div class="row mx-auto">
+				{% for product in products %}
+				<div class="card mx-auto mb-3" id={{product.id}} style="width: 18rem;">
+					<a href="/webuild.html"><img class="card-img-top" src="{{product.image.url}}" alt="Card image cap" height="250" width="150"></a>
+					<div class="card-body">
+						<p class="card-title">{{product.name}}</p>
+						<p class="card-text" style="text-decoration: underline;"><b>{{product.price|currency}}</b></p>
+				<p class="card-text"><b>{{product.description}}</b></p>
+		<!-- {{product | is_in_cart:request.session.cart }} -->
+					</div>
+					<div class="card-footer p-0 no-gutters">
+						{% if product|is_in_cart:request.session.cart %}
+						<div class="row no-gutters">
+							<form action="/#{{product.id}}" class="col-2 " method="post">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input hidden type="text" name='remove' value='True'>
+								<input type="submit" value=" - " class="btn btn-block btn-light border-right">
+							</form>
+							<div class="text-center col">{{product|cart_quantity:request.session.cart}} in Cart</div>
+							<form action="/#{{product.id}}" class="col-2 " method="post">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input type="submit" value=" + " class="btn btn-block btn-light border-left">
+							</form>
+						</div>
+						{% else %}
+				<form action="/#{{product.id}}" method="POST" class="btn-block">
+							{% csrf_token %}
+							<input hidden type="text" name='product' value='{{product.id}}'>
+							<input type="submit" class="float-right btn btn-light  form-control"
+								value="Book Home">
+
+				</form>
+						{% endif %}
+				</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+<div class="footer">
+    <div class="col-1" style="padding-bottom:1%;">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m23!1m12!1m3!1d117408.9378005489!2d72.5042937155302!3d23.13260403389219!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m8!3e6!4m0!4m5!1s0x395e82914557e3d5%3A0xa0a00c8e79c7d597!2sOpp.%20Shantavan%20Party%20Plot%2C%20200%20ft%20Ring%20Road%2C%20Vaishnodevi%20to%20DCIS%20Circle%2C%20Zundal%2C%20Ahmedabad%2C%20Gujarat%20382421!3m2!1d23.1326775!2d72.5743434!5e0!3m2!1sen!2sin!4v1679475660583!5m2!1sen!2sin" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <div class="col-2" style="margin-left:24%;">
+        <h3 style="font-size:40px;">NEWSLETTER</h3>
+        <form>
+            <input type="email" placeholder="your email"required >
+            <br>
+           <div class="social" style="margin-top:20px;">
+                        <a href="https://www.facebook.com/"><i class="fa fa-facebook" style="font-size:150%; color:Orange;margin-left:60%;"></i></a>
+                        <a href="https://twitter.com/"><i class="fa fa-twitter" style="font-size: 150%;color:Orange;"></i></a>
+                        <a href="https://www.google.com/gmail/about/"><i class="fa fa-envelope" style="font-size: 150%;color:Orange;"></i></a>
+                    </div>
+        </form>
+    </div>
+    <div class="col-3">
+        <h3 style="font-size:40px;">Contact</h3>
+        <p class="k">B/165,Sakar-7,Nr.NehruBridge Corner, Ashram Road,Ahmedabad-380007
+          Phone:079-26583196(M) 9824061596,9375061596 <br> E-mail:kbpatelandco@gmail.com <br>
+          Website:www.kbpatelprocon.com
+
+        </p>
+    </div>
+</div>
+{% endblock %}
